@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Random Quote Machine</title>
+	<script src="https://use.fontawesome.com/88c1f2aa03.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="http://code.jquery.com/color/jquery.color-2.1.2.min.js" integrity="sha256-H28SdxWrZ387Ldn0qogCzFiUDDxfPiNIyJX7BECQkDE=" crossorigin="anonymous"></script>
+	<style type="text/css">
+	*{
+		margin: 0;
+		padding: 0;
+        list-style: none;
+        vertical-align: baseline;
+	}
+	body{
+		background: #333;
+		color: #333;
+		font-weight: 400;
+	}
+	div{
+		position: relative;
+		z-index: 2;
+	}
+	.footer{
+		width: 450px;
+		text-align: center;
+		display: block;
+		margin: 15px auto 30px auto;
+		font-size: 0.8em;
+		color: #fff;
+	}
+	.footer a{
+		font-weight: 500;
+		text-decoration: none;
+		color:#fff;
+	}
+	.quote-box{
+		background: #fff;
+		border-radius: 3px;
+		margin:10% auto auto auto;
+		width: 450px;
+		padding: 40px 50px;
+		display: table;
+	}
+	.quote-text{
+		text-align: center;
+		clear: both;
+		font-size: 1.75em;
+		font-weight: 500;
+	}
+	.quote-text i{
+		font-size: 1em;
+		margin-right: 0.4em;
+	}
+	.quote-author{
+		text-align: right;
+		font-size: 1em;
+		padding-top: 20px;
+		clear: both;
+	}
+	.buttons{
+		display: block;
+		margin-top: 30px;
+	}
+	.button{
+		height: 38px;
+		border: none;
+		border-radius: 3px;
+		color: #fff;
+		background: #333;
+		outline: none;
+		font-size: 0.85em;
+		opacity: 1;
+		cursor: pointer;
+		padding-top: 8px 18px 6px 18px;
+		margin-right: 5px;
+	}
+	.buttons .button:hover{
+		opacity: 0.9;
+	}
+	.button.left{
+		float: left;
+		padding-top: 8px;
+		text-align: center;
+		height: 30px;
+		width: 40px;
+		font-size: 1.25em;
+	}
+	#new-quote{
+		float: right;
+		width: 100px;
+	}
+	</style>
+</head>
+<body>
+    <div class="quote-box">
+    	<div class="quote-text">
+    		<i class="fa fa-quote-left"></i>
+    		<span id="text"></span>
+    	</div>
+    	<div class="quote-author">
+    		<span id="author"></span>
+    	</div>
+    	<div class="buttons">
+    		<a class="button left" id="tweet-quote" title="Tweet this quote!" target="_blank">
+    			<i class="fa fa-twitter"></i>
+    		</a>
+    		<a class="button left" id="facebook-quote" title="Post this quote on facebook!" target="_blank">
+    			<i class="fa fa-facebook"></i>
+    		</a>
+    		<button class="button" id="new-quote">New quote</button>
+    	</div>
+    </div>
+    <div class="footer">by <a href="https://codepen.io/supersui/">lmy</a></div>
+    <script type="text/javascript">
+    	var colors = ['#16a085', '#27ae60', '#2c3e50', '#f39c12', '#e74c3c', '#9b59b6', '#FB6964', '#342224', "#472E32", "#BDBB99", "#77B1A9", "#73A857"];
+    	var currentQuote = '', currentAuthor = '';
+    	function getQuote(){
+    		$.getJSON("https://v1.hitokoto.cn/",function(json){
+    			currentQuote=json["hitokoto"];
+    			currentAuthor ="--"+json["from"];
+    			//console.log(content+"_"+author);
+    		});
+    		$(".quote-text").animate({
+    			opacity:0
+    		},500,function(){
+    			$(this).animate({
+    				opacity:1
+    			},500);
+    			$('#text').text(currentQuote);
+    		});
+    		$(".quote-author").animate({
+    			opacity:0
+    		},500,function(){
+    			$(this).animate({
+    				opacity:1
+    			},500);
+    			$('#author').html(currentAuthor);
+    		});
+    		var color=Math.floor(Math.random()*colors.length);
+    		//console.log(colors[color]);
+    		$("html body").animate({backgroundColor:colors[color],color:colors[color]},1000);
+    		$(".button").animate({backgroundColor:colors[color]},1000);
+    	}
+    	$(document).ready(function(){
+    		getQuote();
+    		$("#new-quote").on('click',getQuote);
+    	})
+    </script>
+</body>
+</html>
