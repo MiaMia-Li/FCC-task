@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>todo</title>
+	<meta name='viewprot' content='width=device-width,minmum-scale=1.0,maxmum-scale=1.0'>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://use.fontawesome.com/88c1f2aa03.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+	<style type="text/css">
+    body{
+    	color: #fff;
+    	background: #3b3b3b;
+    	font-family: 'Lato',sans-serif;
+    	font-weight: 300;
+    }
+    h1{
+    	font:72px;
+    	margin:50px;
+    	text-align: center;
+    }
+    .container{
+    	margin:0 auto;
+    	width: 75%;
+    }
+    input{
+    	background: transparent;
+    	border:none;
+    	border-bottom: 1px solid #fff;
+    	font-size: 24px;
+    	height: 50px;
+    	padding-bottom: 15px;
+    }
+    input:focus{
+    	outline: 0;
+    }
+    .input-buttons{
+    	height: 50px;
+    	border-bottom: 1px solid #fff;
+    	padding: 0;
+    }
+    .input-buttons i{
+    		padding: 0 12px;
+    		float: right;
+    		color: #fff;
+    }
+    .input-buttons i.fa-plus{
+    		border-right: 1px solid #fff;
+    		color: #7f7f7f;
+    }
+    .input-buttons .active .fa-plus{
+    	color: #fff;
+    }
+    .input-buttons .active .fa-plus:hover{
+    	color: #4ed047;
+    }
+    .fa-trash-o:hover{
+    	color: #c81c29;
+    }
+    .todo-list{
+    	padding: 0;
+    	margin:20px 0 50px;
+    	overflow: hidden;
+    }
+    .todo{
+    	background: #fff;
+    	color: #3f3f3f;
+    	font-size: 20px;
+    	list-style: none;
+    	margin-top:15px;
+    	padding: 20px;
+    	position: relative;
+    	overflow: hidden;
+    	height: 60px;
+    }
+    .btns{
+    	position: absolute;
+    	right: 0px;
+    	top:-10px;
+    }
+    .btns i{
+    	padding: 10px 15px;
+    }
+    .btns .fa-check{
+    	border-right: 1px solid #3f3f3f;
+    }
+    .btns .fa-check:hover{
+    	color: #4ed047;
+    }
+    input[type="checkbox"]:checked + i{
+    	color: #4ed047;
+    }
+    .finished{
+    	text-decoration: line-through;
+    }
+	</style>
+</head>
+<body>
+    <div id="app">
+    	<h1>To-Do List</h1>
+    	<div class="container">
+    		<div class="row">
+		    	<input :class={active:itemNew} class="col-sm-9" type="text" placeholder="TODO" v-model="itemNew" autofocus>
+		    	<div class="input-buttons col-sm-3">
+		    		<a href="#" @click="clear()" ><i class="fa fa-trash-o fa-2x"></i></a>
+		    		<a href="#" @click="addTask" :class={active:itemNew}><i class="fa fa-plus fa-2x" aria-hidden="true"></i></a>
+		    	</div>
+            </div>
+            <div class="row"> 
+		    	<ul class="todo-list col-sm-12">
+		    		<li class="todo" v-for="(item,index) in list" v-bind:key="index">
+		    			<span class="btns">
+		    			<label><input type="checkbox" @click="changeState(item)" :checked="item.finished" style="visibility: hidden;">
+		    			<i class="fa fa-check" aria-hidden="true"></i></label>
+		                <i @click="removeItem()" class="fa fa-trash-o" aria-hidden="true"></i>
+		                </span>	
+		    			<span :class="{finished:item.finished}">{{item.content}}</span>    					
+		    		</li>
+		    	</ul>    
+	    	</div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    	var todolist="todolist";
+    	// 封装localstorage
+        var store=(function(){
+        	return ({
+        		save:function(data){
+        			localStorage.setItem(todolist,JSON.stringify(data));
+        		},
+        		fetch:function(){
+        			return JSON.parse(localStorage.getItem(todolist));
+        		}
+        	})
+        })();
+    	var vm=new Vue({
+    		el:"#app",
+    		data:{
+    			itemNew:"",
+    			list:store.fetch()||[],
+    		},
+    		methods:{
+    			addTask(){
+    				if(this.itemNew!==""){
+	    				this.list.push({
+	    					content:this.itemNew,
+	    					finished:false,
+	    				});
+	    				this.itemNew="";
+    			    }
+    			},
+    			changeState(item){
+    				item.finished=!item.finished;
+    				store.save(this.list);
+    			},
+    			removeItem(index){
+    				this.list.splice(index,1);
+    			},
+    			clear(){
+    				this.list=[];
+    			}
+    		},
+    		watch:{
+    			list:function(){
+    				store.save(this.list);
+    			}
+    		}
+    	})
+    </script>
+</body>
+</html>
