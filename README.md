@@ -5,3 +5,4 @@ FCC练习:blush:
 * [维基百科入口](https://supersui.github.io/FCC-task/BuildaWikipediaViewer.html)
 * [本地天气应用](https://supersui.github.io/FCC-task/LocalWeather.html)
 * [随机格言生成器](https://supersui.github.io/FCC-task/RandomQuote.html)
+* [codepen地址](https://codepen.io/supersui/)
